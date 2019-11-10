@@ -62,46 +62,44 @@ public class SimpleFileReader extends java.io.FileReader {
      * @return new example with values from txt file
      */
     private static Example constructExampleFromStringTxt(String line) {
-        //List<String> informationAboutExample1 =  Arrays.asList(line.replaceAll("\\s+", " ").split(" "));
-        //ArrayList<String> informationAboutExample =new ArrayList<>();
 
-
-        //informationAboutExample.removeIf(item -> item == null || "".equals(item));//removeAll(Collections.singleton(""));
-        CLEAR_PATTERN .matcher(line).replaceAll(" ").trim();
-        String [] informationAboutExample1 = line.split(" ");
-        //time mm:ss.SSS
+        CLEAR_PATTERN.matcher(line).replaceAll(" ").trim();
+        String[] informationAboutExample1 = line.split(" ");
         ArrayList<String> informationAboutExample = new ArrayList<>();
-        for (String s:informationAboutExample1
+        for (String s : informationAboutExample1
         ) {
-            if(!s.equals(""))
-                informationAboutExample.add(s); }
+            if (!s.equals(""))
+                informationAboutExample.add(s);
+        }
 
-        String [] time = informationAboutExample.get(0).split(":");
-
+        //time mm:ss.SSS
+        String[] time = informationAboutExample.get(0).split(":");
         int minute = Integer.parseInt(time[0]);
         char[] seconds = time[1].toCharArray();
         String secondsStr = "";
         String millisecondsStr = "";
-        secondsStr+=seconds[0];
-        secondsStr+=seconds[1];
-        millisecondsStr+=seconds[3];
-        millisecondsStr+=seconds[4];
-        millisecondsStr+=seconds[5];
+        secondsStr += seconds[0];
+        secondsStr += seconds[1];
+        millisecondsStr += seconds[3];
+        millisecondsStr += seconds[4];
+        millisecondsStr += seconds[5];
         String numStr;
         int second = Integer.parseInt(secondsStr);
         int millisecond = Integer.parseInt(millisecondsStr);
         int millisecondSum = minute * 60000 + second * 1000 + millisecond;
+
         // get all information from string in correctWay
         int previousId = Integer.parseInt(informationAboutExample.get(1));
         String typeOfAnomaly = informationAboutExample.get(2);
         int anomalyTime = AnomalyType.getTypeId(typeOfAnomaly);
         int sub = Integer.parseInt(informationAboutExample.get(3));
         int chan = Integer.parseInt(informationAboutExample.get(4));
-        if(informationAboutExample.get(5).contains("\t")) {
+
+        if (informationAboutExample.get(5).contains("\t")) {
             numStr = informationAboutExample.get(5).split("\t")[0];
-        }
-        else numStr = informationAboutExample.get(5);
+        } else numStr = informationAboutExample.get(5);
         int num = Integer.parseInt(numStr);
+
         return new Example(millisecondSum, anomalyTime, sub, chan, num, previousId);
     }
 

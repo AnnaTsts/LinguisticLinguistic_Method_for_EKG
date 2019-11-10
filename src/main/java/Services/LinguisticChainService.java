@@ -123,7 +123,7 @@ public class LinguisticChainService {
                         anomaly.append(e.getLetter());
                     }
                     anomalyService.saveAnomaly(new Anomaly(anomaly.toString()));
-                    isAnomalyNow=false;
+                    isAnomalyNow = false;
                 } else examplesForAnomaly.add(currExample);
             }
         }
