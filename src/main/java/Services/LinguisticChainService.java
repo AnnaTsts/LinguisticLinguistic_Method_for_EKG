@@ -22,8 +22,10 @@ public class LinguisticChainService {
     private ResultService resultService = new ResultService();
     private AnomalyService anomalyService = new AnomalyService();
     private boolean isAnomalyNow = false;
+    private int typeOfAnomaly = 0;
 
-    public void getExamplesFromFile(String fileCSVPath, String fileTxtPath) {
+
+    public void getExamplesFromFiles(String fileCSVPath, String fileTxtPath) {
 
         InputFile inputCsv = SimpleFileReader.getFileExtension(fileCSVPath).equals("csv") ? new InputFile(FileType.EXAMPLE_CSV, fileCSVPath) : null;
         InputFile inputTxt = SimpleFileReader.getFileExtension(fileTxtPath).equals("txt") ? new InputFile(FileType.STATISTIC_TXT, fileTxtPath) : null;
@@ -105,6 +107,7 @@ public class LinguisticChainService {
     private void checkAnomaly(Example currExample, List<Example> examplesForAnomaly, Result result) {
         if (currExample.getType() > 2) {
             isAnomalyNow = true;
+            typeOfAnomaly = currExample.getType();
             examplesForAnomaly.add(currExample);
             result.setAnomaly(result.getAnomaly() + 1);
             resultService.updateResult(result);
@@ -122,8 +125,10 @@ public class LinguisticChainService {
                     ) {
                         anomaly.append(e.getLetter());
                     }
-                    anomalyService.saveAnomaly(new Anomaly(anomaly.toString()));
+
+                    anomalyService.saveAnomaly(new Anomaly(anomaly.toString(), typeOfAnomaly));
                     isAnomalyNow = false;
+                    typeOfAnomaly = 0;
                 } else examplesForAnomaly.add(currExample);
             }
         }

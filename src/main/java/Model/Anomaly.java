@@ -15,8 +15,12 @@ public class Anomaly {
     @Column(name = "anomaly_string")
     private String anomalyString;
 
-    public Anomaly(String anomalyString) {
+    @Column(name = "anomaly_type_id")
+    private int anomalyType;
+
+    public Anomaly(String anomalyString, int anomalyType) {
         this.anomalyString = anomalyString;
+        this.anomalyType = anomalyType;
     }
 }
 

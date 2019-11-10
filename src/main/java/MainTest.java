@@ -10,7 +10,7 @@ public class MainTest {
         LinguisticChainService linguisticChainService = new LinguisticChainService();
 
         //exampleService.saveExamples( linguisticChainService.getExamplesFromFile("/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100.csv","/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100annotations.txt"));
-         linguisticChainService.getExamplesFromFile("/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100.csv","/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100annotations.txt");
+         linguisticChainService.getExamplesFromFiles("/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100.csv","/Users/annatsytsyluik/Documents/КПИ/Диплом/mitbih-database/100annotations.txt");
     }
 
 
