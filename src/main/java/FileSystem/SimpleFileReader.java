@@ -9,10 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class SimpleFileReader extends java.io.FileReader {
 
+    private static final Pattern CLEAR_PATTERN = Pattern.compile("[\\s]+");
 
     public SimpleFileReader(InputFile file) throws FileNotFoundException {
         super(file.getPathToFile());
@@ -30,7 +32,7 @@ public class SimpleFileReader extends java.io.FileReader {
                 BufferedReader fileStream = new BufferedReader(new SimpleFileReader(file));
                 fileStream.readLine();
                 String nextLineInFile = fileStream.readLine();
-                ;
+
                 try {
                     while (nextLineInFile != null) {
                         examples.add(constructExampleFromStringTxt(nextLineInFile));
@@ -60,21 +62,46 @@ public class SimpleFileReader extends java.io.FileReader {
      * @return new example with values from txt file
      */
     private static Example constructExampleFromStringTxt(String line) {
-        String[] informationAboutExample = line.replaceAll("  ", " ").split(" ");
+        //List<String> informationAboutExample1 =  Arrays.asList(line.replaceAll("\\s+", " ").split(" "));
+        //ArrayList<String> informationAboutExample =new ArrayList<>();
+
+
+        //informationAboutExample.removeIf(item -> item == null || "".equals(item));//removeAll(Collections.singleton(""));
+        CLEAR_PATTERN .matcher(line).replaceAll(" ").trim();
+        String [] informationAboutExample1 = line.split(" ");
         //time mm:ss.SSS
-        System.out.println(informationAboutExample);
-        String[] time = informationAboutExample[0].trim().split(":");
+        ArrayList<String> informationAboutExample = new ArrayList<>();
+        for (String s:informationAboutExample1
+        ) {
+            if(!s.equals(""))
+                informationAboutExample.add(s); }
+
+        String [] time = informationAboutExample.get(0).split(":");
+
         int minute = Integer.parseInt(time[0]);
-        int second = Integer.parseInt(time[1].split(".")[0]);
-        int millisecond = Integer.parseInt(time[1].split(".")[1]);
+        char[] seconds = time[1].toCharArray();
+        String secondsStr = "";
+        String millisecondsStr = "";
+        secondsStr+=seconds[0];
+        secondsStr+=seconds[1];
+        millisecondsStr+=seconds[3];
+        millisecondsStr+=seconds[4];
+        millisecondsStr+=seconds[5];
+        String numStr;
+        int second = Integer.parseInt(secondsStr);
+        int millisecond = Integer.parseInt(millisecondsStr);
         int millisecondSum = minute * 60000 + second * 1000 + millisecond;
         // get all information from string in correctWay
-        int previousId = Integer.parseInt(informationAboutExample[1]);
-        String typeOfAnomaly = informationAboutExample[2];
+        int previousId = Integer.parseInt(informationAboutExample.get(1));
+        String typeOfAnomaly = informationAboutExample.get(2);
         int anomalyTime = AnomalyType.getTypeId(typeOfAnomaly);
-        int sub = Integer.parseInt(informationAboutExample[3]);
-        int chan = Integer.parseInt(informationAboutExample[4]);
-        int num = Integer.parseInt(informationAboutExample[4]);
+        int sub = Integer.parseInt(informationAboutExample.get(3));
+        int chan = Integer.parseInt(informationAboutExample.get(4));
+        if(informationAboutExample.get(5).contains("\t")) {
+            numStr = informationAboutExample.get(5).split("\t")[0];
+        }
+        else numStr = informationAboutExample.get(5);
+        int num = Integer.parseInt(numStr);
         return new Example(millisecondSum, anomalyTime, sub, chan, num, previousId);
     }
 

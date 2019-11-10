@@ -26,7 +26,7 @@ public class LinguisticChainService {
     public void getExamplesFromFile(String fileCSVPath, String fileTxtPath) {
 
         InputFile inputCsv = SimpleFileReader.getFileExtension(fileCSVPath).equals("csv") ? new InputFile(FileType.EXAMPLE_CSV, fileCSVPath) : null;
-        InputFile inputTxt = SimpleFileReader.getFileExtension(fileTxtPath).equals("txt") ? new InputFile(FileType.STATISTIC_TXT, fileCSVPath) : null;
+        InputFile inputTxt = SimpleFileReader.getFileExtension(fileTxtPath).equals("txt") ? new InputFile(FileType.STATISTIC_TXT, fileTxtPath) : null;
         List<Example> examplesTxt = SimpleFileReader.readFile(inputTxt);
         //save here last 10 examples and when we find anomaly save 10 after anomaly and save them into bd
         List<Example> examplesForAnomaly = new ArrayList<>();
@@ -67,9 +67,16 @@ public class LinguisticChainService {
      * @param example - current example
      */
     private void getSimilarExampleByPrevId(List<Example> examples, Example example) {
-        Example exampleFromTxt = examples.stream().filter(x -> example.getPrevious_id() == (x.getPrevious_id())).findFirst().orElse(null);
+        Example exampleFromTxt = null;
+        System.out.println(examples.size());
+        for (Example e : examples
+        ) {
+            if (e.getPrevious_id() == example.getPrevious_id())
+                exampleFromTxt = e;
+        }
+
+
         if (exampleFromTxt != null) {
-            System.out.println("YES");
             example.setChan(exampleFromTxt.getChan());
             example.setNum(exampleFromTxt.getNum());
             example.setSub(exampleFromTxt.getSub());
@@ -116,6 +123,7 @@ public class LinguisticChainService {
                         anomaly.append(e.getLetter());
                     }
                     anomalyService.saveAnomaly(new Anomaly(anomaly.toString()));
+                    isAnomalyNow=false;
                 } else examplesForAnomaly.add(currExample);
             }
         }
